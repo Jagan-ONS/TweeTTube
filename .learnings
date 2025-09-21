@@ -1,0 +1,5 @@
+added gitignore using gitignore generator and in that i have added .txt 
+added some files in src using powershell using 
+New-Item app.js, constants.js, index.js -ItemType File
+
+installed the nodemon directory in the src folder instead of root folder 
