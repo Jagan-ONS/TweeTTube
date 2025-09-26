@@ -19,7 +19,7 @@ const registerUser = asyncHandler( async (req,res)=>{
     //upload them to cloudinary - from that we will get a resp and we will take a url from the returned value 
     //create an object for db - and create an entry in db
 
-    const {fullname,email,username,password} =  req.body 
+    const {fullName,email,username,password} =  req.body 
     // console.log("email : ",email);
     // i thougtht we have to keep () after body
 
@@ -39,7 +39,7 @@ const registerUser = asyncHandler( async (req,res)=>{
     //or until the end of the array 
 
     if(
-        [fullname,email,username,password].some((feild)=>{
+        [fullName,email,username,password].some((feild)=>{
             return (feild?.trim() === "");
             //we are not doing this directly like feild === "" 
             //this because feild may be equals to "    " so we will trim the feild 
@@ -54,7 +54,7 @@ const registerUser = asyncHandler( async (req,res)=>{
     //we can do this by using username or by email 
     //what is the syntax we can write findOne() two time 
     //but we can use $(somebitwise operation) to check by any no of entries
-    const existedUser = User.findOne({
+    const existedUser =await User.findOne({
         $or: [{username},{email}]
     })
 
@@ -72,9 +72,14 @@ const registerUser = asyncHandler( async (req,res)=>{
     //among those avatar[0] ie first value contains an object which will have the path 
 
     const avatarLocalPath = req.files?.avatar[0]?.path
-    const coverImageLocalPath =  req.files?.coverImage[0]?.path
+    // const coverImageLocalPath =  req.files?.coverImage[0]?.path
 
-    if(avatarLocalPath){
+    let coverImageLocalPath;
+    if(req.files && Array.isArray(req.files.coverImage) && (req.files.coverImage.length >0)){
+        coverImageLocalPath = req.files.coverImage[0].path
+    }
+
+    if(!avatarLocalPath){
         throw new ApiError(400,"Avatar file is required")
     }
 
@@ -95,9 +100,9 @@ const registerUser = asyncHandler( async (req,res)=>{
         //and also cloudinary issue
     }
     const user =  await User.create({
-        fullname,
+        fullName,
         avatar : avatar.url,
-        coverImage : coverImage?.url || "",
+        coverImage : coverImage?.url || "" ,
         email,
         password,
         username: username.toLowerCase()
