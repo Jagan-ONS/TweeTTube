@@ -1,11 +1,11 @@
 //what does this middleware do ??
 //this will check if the user is ther or not 
 
-import { ApiError } from "../utils/ApiError";
-import { asyncHandler } from "../utils/asyncHandler";
+import { ApiError } from "../utils/ApiError.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
 import jwt from "jsonwebtoken"
-import { User } from "../models/user.model";
-import { ApiResponse } from "../utils/ApiResponse";
+import { User } from "../models/user.model.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
 //why do we have to verify jwt
 //what does verifing jwt means  
 //
