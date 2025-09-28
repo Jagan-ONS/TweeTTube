@@ -4,6 +4,23 @@ import {User} from "../models/user.model.js"
 import {uploadOnCloudinary} from "../utils/cloudinary.js"
 import {ApiResponse} from "../utils/ApiResponse.js"
 
+const generateAccessAndRefreshTokens = async(userId) =>
+{//here why we haven't used async handler function 
+    try{
+        const user = await User.findById(userId)
+        const accessToken = user.generateAccessToken()
+        const refreshToken = user.generateRefreshToken()
+        user.refreshToken = refreshToken;
+        //while saving we need password but here we don't have any 
+        //how to bipass this verificatioon step ie how to save without pass 
+        await user.save({validateBeforeSave : false})
+        return {accessToken , refreshToken}
+    }
+    catch(error){
+        throw new ApiError(500,"something went wrong while generating refresh and access tokens")
+    }
+}
+
 const registerUser = asyncHandler( async (req,res)=>{
     // res.status(200).json(
     //     {
@@ -120,4 +137,97 @@ const registerUser = asyncHandler( async (req,res)=>{
 
 })
 
-export {registerUser}
+const loginUser = asyncHandler( async (req,res)=>{
+    //get data from the req ie from frontend
+    const {username,email,password} = req.body
+    //check if all feilds are present or not 
+    if(!username && !email){
+        throw new ApiError(400,"Enter username or email")
+    }
+    if(!password){
+        throw new ApiError(400,"Enter your password")
+    }
+    //check if there is any entry with the username or email id
+    const user = await User.findOne(
+        {$or : [{username},{email}]}
+    )
+    //if there is no entry with this email or username 
+    //we have to redirect to the registerUser page ???
+    if(!user){
+        throw new ApiError(404,"user does not exist")
+    }
+    //now check if the password is correct this can be done by 
+    //the check password function in usermodel
+    const isPasswordValid = await user.isPasswordCorrect(password)
+    if(!isPasswordValid){
+        throw new ApiError(404,"Invalid user credentials")
+    }
+    //now generate access and refresh token using the functions in usermodel
+    const{accessToken,refreshToken} = await generateAccessAndRefreshTokens(user._id)
+    //now we have to send these in the cookies 
+    //what info we have to sent the user 
+
+    const loggedInUser = await User.findById(user._id).select("-password -refreshToken")
+    
+    //now we have required details of user and we want to send cookies
+    //we can do this by using .cookie in cookie parser 
+    //what are the inputs for that method 
+
+    const options = {
+        httpOnly : true,
+        secure : true
+    }
+
+    return res
+    .status(200)
+    .cookie("accessToken",accessToken,options)
+    .cookie("refreshToken",refreshToken,options)
+    .json(
+        new ApiResponse(
+            200,
+            {
+                user : loggedInUser,
+                accessToken,
+                refreshToken
+            },
+            "User logged in seccessfully"
+        )
+    )
+    //cookies are not set in the mobile applications ??
+
+})
+
+//now how to logout 
+//clearing out tokens ie removing tokens from the webbrowser ans also from the 
+//logout mean taking access from the user
+//now how to get the userid to logout ie clear the tokens from the db ???
+//from req we will get usename email and pass ?? no ig 
+//but what does the req contians?
+//we can use .cookie since we have user cookie middleware 
+
+const logoutUser = asyncHandler(async(req,rew)=>{
+    await User.findByIdAndUpdate(
+        req.user._id,
+        {
+            $set : {
+                refreshToken : undefined
+            },
+        },
+        {
+            new : true
+            //when we say this we will the updated value in the response 
+        }
+    )
+    const options = {
+        httpOnly : true,
+        secure : true
+    }
+
+    return res
+    .status(200)
+    .clearCookie("accessToken",options)
+    .clearCookie("refreshToken",options)
+    .json(new ApiResponse(200,{},"User Logged Out"))
+})
+
+export {registerUser , loginUser , logoutUser}

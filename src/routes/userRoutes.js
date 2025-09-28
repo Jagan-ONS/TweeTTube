@@ -1,6 +1,8 @@
 import { Router } from "express";
-import { registerUser } from "../controllers/user.controller.js";
+import { loginUser, logoutUser, registerUser } from "../controllers/user.controller.js";
 import { upload } from "../middlewares/multer.middleware.js"
+import { verifyJWT } from "../middlewares/auth.middleware.js";
+
 const router = Router()
 
 router.route("/register").post(
@@ -16,7 +18,13 @@ router.route("/register").post(
     ])
     //we can't use array here because it takes multiple files 
     //in a single field 
-    ,registerUser)
+    ,registerUser
+)
+
+router.route("/login").post(loginUser)
+
+//secured routes 
+router.route("/logout").post(verifyJWT, logoutUser)
 
 export default router
 //there are two ways to export router 
