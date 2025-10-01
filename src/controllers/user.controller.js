@@ -211,9 +211,12 @@ const logoutUser = asyncHandler(async(req,res)=>{
     await User.findByIdAndUpdate(
         req.user._id,
         {
-            $set : {
-                refreshToken : undefined
-            },
+            // $set : {
+            //     refreshToken : undefined //we can keep null also
+            // },
+            $unset : {
+                refreshToken : 1
+            }
         },
         {
             new : true
@@ -406,19 +409,25 @@ const getUserChannelProfile = asyncHandler(async(req,res)=>{
                 username : username?.toLowerCase()
                 //in users fing all documents with this username 
                 //since username is unique we now have only one document
-            },
+            }
+        },
+        {
             $lookup : {
                 from : "subscriptions",
                 localField : "_id",
                 foreignField : "channel",
                 as : "subscribers"
-            },
+            }
+        },
+        {
             $lookup : {
                 from : "subscriptions",
                 localField : "_id",
                 foreignField : "channel",
                 as : "subscribedTo"
-            },
+            }
+        },
+        {
             $addFields : {
                 subscribersCount :{
                     $size : "$subscribers"
@@ -434,7 +443,9 @@ const getUserChannelProfile = asyncHandler(async(req,res)=>{
                     }
                 }
 
-            },
+            }
+        },
+        {
             $project : {
                 fullName : 1,
                 username : 1,
@@ -460,7 +471,7 @@ const getWatchHistory = asyncHandler( async(req,res) => {
     const user = await User.aggregate([
         {
             $match : {
-                _id : new mongoose.Types.ObjectId( req.user._id)
+                _id : new mongoose.Types.ObjectId(req.user._id)
             }
         },
         {
@@ -502,9 +513,10 @@ const getWatchHistory = asyncHandler( async(req,res) => {
     return res
     .status(200)
     .json(
-        200,
-        user[0].watchHistory,
-        "watch history fetced successfully"
+        // 200,
+        // user,
+        // "watch history fetced successfully"
+        new ApiResponse(200,user[0].watchHistory,"watch history fetced successfully")
     )
 })
 

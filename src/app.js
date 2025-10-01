@@ -17,7 +17,7 @@ app.use(cookieParser())
 //since we are seperating the routers and controller we use routers as midllewares
 
 //routes 
-import userRouter from './routes/userRoutes.js'
+import userRouter from './routes/user.routes.js'
 
 app.use('/api/v1/users',userRouter)
 
