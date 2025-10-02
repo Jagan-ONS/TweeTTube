@@ -37,4 +37,12 @@ export const verifyJWT = asyncHandler(async (req,res,next) =>
         throw new ApiError(401,error?.message||"invalide access token")
     }
 
+    //we try to take the token from res either through cookies or header 
+    //if there is no token at all that means cur req is unaut req the use who are trying to do this is 
+    //not logged in or something like that explain clearly ??
+    //let say token is found then we use verify to decode the token ?? this splits the token into 
+    // payload and some other headers ??
+    //this decoded token is an object or a document ??
+    // explaint what does this do clearly 
+
 })
