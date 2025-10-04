@@ -36,27 +36,21 @@ const toggleVideoLike = asyncHandler( async(req,res)=>{
     //but it should 
     //does it have any null value or it will get some error ???
     if(!userId){
-        return res
-        .status(401)
-        .json(new ApiError(401,"Please login to like the video"))
+        throw new ApiError(401,"Please login to like the video")
         //is this the correct status code 
         //404 if the resource we are trying to find doesn't exist 
         //401 unothorized if the user is not logged in 
     }
 
     if(!mongoose.isValidObjectId(videoId)){
-        return res
-        .status(400)
-        .json(new ApiError(400,"Invalid videoId"))
+        throw new ApiError(400,"Invalid videoId")
     }
     //here we have to check if the videoId is valid or not 
     //since the 
     const videoEntry =await Video.findById(videoId)
 
     if(!videoEntry){
-        return res
-        .status(404)
-        .json(new ApiError(404,"Video not found"))
+        throw new ApiError(404,"Video not found")
     }
 
     const likeEntry = await Like.findOne({video : videoId , likedBy : userId})
@@ -95,15 +89,11 @@ const toggleCommentLike = asyncHandler( async(req,res)=>{
     const userId = req.user._id;
 
     if (!userId) {
-        return res
-        .status(401)
-        .json(new ApiError(401, "Please login to like the comment"));
+        throw new ApiError(401, "Please login to like the comment")
     }
 
     if (!mongoose.isValidObjectId(commentId)) {
-        return res
-        .status(400)
-        .json(new ApiError(400, "Invalid commentId"));
+        throw new ApiError(400, "Invalid commentId")
     }
 
     const commentEntry = await Comment.findById(commentId);
@@ -138,22 +128,17 @@ const toggleTweetLike = asyncHandler(async (req, res) => {
     const userId = req.user._id;
 
     if (!userId) {
-        return res
-        .status(401)
-        .json(new ApiError(401, "Please login to like the tweet"));
+        throw new ApiError(401, "Please login to like the tweet")
+        
     }
 
     if (!mongoose.isValidObjectId(tweetId)) {
-        return res
-        .status(400)
-        .json(new ApiError(400, "Invalid tweetId"));
+        throw new ApiError(400, "Invalid tweetId")
     }
 
     const tweetEntry = await Tweet.findById(tweetId);
     if (!tweetEntry) {
-        return res
-        .status(404)
-        .json(new ApiError(404, "Tweet not found"));
+        throw new ApiError(404, "Tweet not found")
     }
 
     const likeEntry = await Like.findOne({ tweet: tweetId, likedBy: userId });
@@ -202,17 +187,13 @@ const getLikeCountOfVideo = asyncHandler( async(req,res)=>{
     //or not ??
 
     if(!mongoose.isValidObjectId(videoId)){
-        return res
-        .status(400)
-        .json(new ApiError(400,"Invalid videoId"))
+        throw new ApiError(400,"Invalid videoId")
     }
 
     const videoEntry = await Video.findById(videoId)
 
     if(!videoEntry){
-        return res
-        .status(404)
-        .json(new ApiError(404,"Video not found"))
+        throw new ApiError(404,"Video not found")
     }
 
     const videoLikes = await Like.countDocuments({video : videoId})
@@ -227,12 +208,12 @@ const getLikeCountOfComment = asyncHandler( async(req,res)=>{
     const commentId = req.body.commentId;
 
     if (!mongoose.isValidObjectId(commentId)) {
-        return res.status(400).json(new ApiError(400, "Invalid commentId"));
+        throw new ApiError(400, "Invalid commentId")
     }
 
     const commentEntry = await Comment.findById(commentId);
     if (!commentEntry) {
-        return res.status(404).json(new ApiError(404, "Comment not found"));
+        throw new ApiError(404, "Comment not found")
     }
 
     const commentLikes = await Like.countDocuments({ comment: commentId });
@@ -244,12 +225,12 @@ const getLikeCountOfTweet = asyncHandler( async(req,res)=>{
     const tweetId = req.body.tweetId;
 
     if (!mongoose.isValidObjectId(tweetId)) {
-        return res.status(400).json(new ApiError(400, "Invalid tweetId"));
+        throw new ApiError(400, "Invalid tweetId")
     }
 
     const tweetEntry = await Tweet.findById(tweetId);
     if (!tweetEntry) {
-        return res.status(404).json(new ApiError(404, "Tweet not found"));
+        throw new ApiError(404, "Tweet not found")
     }
 
     const tweetLikes = await Like.countDocuments({ tweet: tweetId });
