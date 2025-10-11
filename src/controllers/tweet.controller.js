@@ -39,7 +39,7 @@ const createTweet = asyncHandler(async(req,res)=>{
 })
 
 const deleteTweet = asyncHandler(async(req,res)=>{
-    const {tweetId} = req.body
+    const {tweetId} = req.params
     const userId = req.user._id
     //first we will fetch the document and delete
     // const tweet = await Tweet.findById(tweetId)
@@ -68,7 +68,8 @@ const deleteTweet = asyncHandler(async(req,res)=>{
 
 const updateTweet = asyncHandler(async(req,res)=>{
     //get tweetid , updated dec , user id from the req body 
-    const {tweetId,tweetContent} = req.body
+    const {tweetContent} = req.body
+    const {tweetId} = req.params
     const userId = req.user._id
     // //can we add tweet info using another middleware 
     // //why ?? to use req.tweet._id , req.tweet.decpriton :)

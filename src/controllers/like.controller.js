@@ -25,7 +25,7 @@ const toggleVideoLike = asyncHandler( async(req,res)=>{
     //if present we have to delete how can we delete
     //using findoneAndDelete
 
-    const {videoId} = req.body;
+    const {videoId} = req.params;
     //here we don't take user id from req.body 
     //usually it is attached to req
 
@@ -85,7 +85,7 @@ const toggleVideoLike = asyncHandler( async(req,res)=>{
 })
 
 const toggleCommentLike = asyncHandler( async(req,res)=>{
-    const { commentId } = req.body;
+    const { commentId } = req.params;
     const userId = req.user._id;
 
     if (!userId) {
@@ -124,7 +124,7 @@ const toggleCommentLike = asyncHandler( async(req,res)=>{
 })
 
 const toggleTweetLike = asyncHandler(async (req, res) => {
-    const { tweetId } = req.body;
+    const { tweetId } = req.params;
     const userId = req.user._id;
 
     if (!userId) {
@@ -179,7 +179,7 @@ const getAllLikedVideos = asyncHandler( async(req,res) =>{
 })
 
 const getLikeCountOfVideo = asyncHandler( async(req,res)=>{
-    const videoId = req.body.videoId;
+    const {videoId} = req.params;
 
     //since videoId is coming from a client 
     //we have to chekc if the videoId is proper mongoose object id
@@ -205,7 +205,7 @@ const getLikeCountOfVideo = asyncHandler( async(req,res)=>{
 })
 
 const getLikeCountOfComment = asyncHandler( async(req,res)=>{
-    const commentId = req.body.commentId;
+    const {commentId} = req.params;
 
     if (!mongoose.isValidObjectId(commentId)) {
         throw new ApiError(400, "Invalid commentId")
@@ -222,7 +222,7 @@ const getLikeCountOfComment = asyncHandler( async(req,res)=>{
 })
 
 const getLikeCountOfTweet = asyncHandler( async(req,res)=>{
-    const tweetId = req.body.tweetId;
+    const tweetId = req.params;
 
     if (!mongoose.isValidObjectId(tweetId)) {
         throw new ApiError(400, "Invalid tweetId")

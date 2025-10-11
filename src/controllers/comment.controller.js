@@ -8,7 +8,7 @@ import { Comment } from "../models/comment.model";
 import { ApiError } from "../utils/ApiError";
 import { ApiResponse } from "../utils/ApiResponse";
 import { asyncHandler } from "../utils/asyncHandler";
-import mongoose, { mongo } from "mongoose";
+import mongoose from "mongoose";
 
 const getVideoComments = asyncHandler(async(req,res)=>{
     
@@ -79,7 +79,7 @@ const addComment = asyncHandler(async(req,res)=>{
     //do we get userid through .user 
     //does the uset needs to login to comment yes 
     //so while verification .user will be added to the req
-    const videoId  = req.body.videoId
+    const {videoId}  = req.params
     const content = req.body.content?.trim();
     const userId = req.user._id
 
@@ -105,7 +105,7 @@ const addComment = asyncHandler(async(req,res)=>{
 })
 
 const updateComment = asyncHandler(async(req,res)=>{
-    const commentId = req.body.commentId
+    const {commentId} = req.params
     const content = req.body.content?.trim()||""
     const userId = req.user._id
     //do we have to check if commentId is valid or not 
@@ -146,7 +146,7 @@ const updateComment = asyncHandler(async(req,res)=>{
 })
 
 const deleteComment = asyncHandler(async (req,res)=>{
-    const commentId = req.body.commentId
+    const {commentId} = req.params
     const userId = req.user._id
 
     if(!mongoose.Types.ObjectId.isValid(commentId)){
