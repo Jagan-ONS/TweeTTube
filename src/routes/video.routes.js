@@ -10,7 +10,7 @@ import {
 } from "../controllers/video.controller.js"
 import { verifyJWT } from "../middlewares/auth.middleware";
 import { upload } from "../middlewares/multer.middleware.js";
-import { get } from "mongoose";
+
 router.use(verifyJWT)
 
 router.route("/").get(getAllVideos).post(upload.fields([
