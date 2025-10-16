@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { healthcheck } from "../controllers/healthcheck.controller";
+import { healthcheck } from "../controllers/healthcheck.controller.js";
 const router = Router()
 
 //we have to check if the server is connected and db is

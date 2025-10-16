@@ -15,7 +15,7 @@
 // now how to write this 
 
 import mongoose from "mongoose";
-import { asyncHandler } from "../utils/asyncHandler";
+import { asyncHandler } from "../utils/asyncHandler.js";
 
 const healthcheck = asyncHandler( async(req,res)=>{
     return res

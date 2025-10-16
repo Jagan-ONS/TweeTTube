@@ -4,10 +4,10 @@
 //we can also like the comment ans but will this be written in like controller ??
 // we can also reply for comments
 
-import { Comment } from "../models/comment.model";
-import { ApiError } from "../utils/ApiError";
-import { ApiResponse } from "../utils/ApiResponse";
-import { asyncHandler } from "../utils/asyncHandler";
+import { Comment } from "../models/comment.model.js";
+import { ApiError } from "../utils/ApiError.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
 import mongoose from "mongoose";
 
 const getVideoComments = asyncHandler(async(req,res)=>{

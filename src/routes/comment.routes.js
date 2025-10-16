@@ -6,9 +6,9 @@ import {
     addComment,
     updateComment,
     deleteComment
- } from "../controllers/comment.controller";
+ } from "../controllers/comment.controller.js";
 
- import { verifyJWT } from "../middlewares/auth.middleware";
+ import { verifyJWT } from "../middlewares/auth.middleware.js";
 //now we want to get all comments of a video
 //we don't have to be the owner of that video to get the comments so verifyJWT is 
 //not required 

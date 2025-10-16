@@ -3,11 +3,11 @@
 //we need to get all the videos uploades by the users 
 
 import mongoose from "mongoose";
-import { asyncHandler } from "../utils/asyncHandler";
-import { Video } from "../models/video.model";
-import { Subscription } from "../models/subscription.model";
-import { ApiResponse } from "../utils/ApiResponse";
-import { Like } from "../models/like.model";
+import { asyncHandler } from "../utils/asyncHandler.js";
+import { Video } from "../models/video.model.js";
+import { Subscription } from "../models/subscription.model.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
+import { Like } from "../models/like.model.js";
 
 const getChannelStats = asyncHandler(async(req,res)=>{
     //what does req usually contains ?? when we wnat channel stats 
