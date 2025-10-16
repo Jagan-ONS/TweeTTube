@@ -20,9 +20,11 @@ import {
 //so we don't have to mention in the route 
 //we can directly send then when requires 
 
+router.route("/:videoId").get(getVideoComments)
+
 router.use(verifyJWT)
 
-router.route("/:videoId").get(getVideoComments).post(addComment)
+router.route("/:videoId").post(addComment)
 
 //there are no query paramenter 
 //we have to get the required values from the body

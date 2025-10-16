@@ -24,7 +24,7 @@ const getAllVideos = asyncHandler(async(req,res)=>{
     const limitNum = parseInt(limit)
     //get all videos based on query sort pagination 
     //get all videos of some user 
-
+    // console.log(userId);
     const filter = {};
     filter.owner = userId
     if(query){
@@ -133,13 +133,16 @@ const publishVideo = asyncHandler(async(req,res)=>{
 })
 
 const getVideoById = asyncHandler(async(req,res)=>{
+    // console.log("coming here")
     const {videoId} = req.params
     if(!mongoose.isValidObjectId(videoId)){
+        
         throw new ApiError(400,"Invalid videoId")
     }
 
-    const video = await Video.findById(videoId).populate("owner" , "username")
+    const video = await Video.findById(videoId)?.populate("owner" , "username")
     if(!video){
+        
         throw new ApiError(404,"Video not found")
     }
     if (!video.isPublished && video.owner._id.toString() !== req.user._id.toString()) {
@@ -149,7 +152,7 @@ const getVideoById = asyncHandler(async(req,res)=>{
 
     return res
     .status(200)
-    .json(new ApiResponse(200,video,"Fetched video successfully"))
+    .json(new ApiResponse(200,video,"Fetched video successfully..."))
 
 })
 
@@ -221,10 +224,10 @@ const deleteVideo = asyncHandler(async(req,res)=>{
         throw new ApiError(400,"Invalid videoId")
     }
 
-    const deletedVideo = await Video.findOneAndDelete({owner:mongoose.Types.ObjectId(req.user._id) , _id : videoId})
+    const deletedVideo = await Video.findOneAndDelete({owner:new mongoose.Types.ObjectId(req.user._id) , _id : videoId})
 
     if(!deletedVideo){
-        throw new ApiError(404,"Video not found or unauthorized request")
+        throw new ApiError(404,"Video not found or unauthorized request..")
     }
     return res
     .status(200)

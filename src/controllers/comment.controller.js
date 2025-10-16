@@ -79,6 +79,7 @@ const addComment = asyncHandler(async(req,res)=>{
     //do we get userid through .user 
     //does the uset needs to login to comment yes 
     //so while verification .user will be added to the req
+    // console.log(req);
     const {videoId}  = req.params
     const content = req.body.content?.trim();
     const userId = req.user._id
@@ -87,6 +88,7 @@ const addComment = asyncHandler(async(req,res)=>{
     if(!mongoose.Types.ObjectId.isValid(videoId)){
         throw new ApiError(400,"Invalid VideId")
     }
+    //here we have to check if the user is logged in or not right ??
     if(content === ""){
         throw new ApiError(400,"Content can't be empty")
     }

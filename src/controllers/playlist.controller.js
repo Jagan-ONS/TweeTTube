@@ -188,6 +188,7 @@ const updatePlaylist = asyncHandler(async (req, res) => {
     }
 
     // build update object dynamically
+    // we have to check if it's empty or not 
     const updateData = {};
     if (name) updateData.name = name.trim();
     if (description) updateData.description = description.trim();
